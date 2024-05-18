@@ -1,0 +1,51 @@
+Jozan:
+  ac: 18
+  hp: 11
+  speed: 30
+  level: 1
+  str: 16
+  dex: 9
+  con: 16
+  int: 9
+  wis: 16
+  cha: 9
+  weapon: mace
+
+Tordek:
+  ac: 16
+  hp: 13
+  speed: 30
+  level: 1
+  str: 16
+  dex: 14
+  con: 16
+  int: 10
+  wis: 12
+  cha: 9
+  weapon: greatsword
+
+Lidda:
+  ac: 15
+  hp: 11
+  speed: 30
+  level: 1
+  str: 13
+  dex: 16
+  con: 16
+  int: 10
+  wis: 12
+  cha: 10
+  weapon: light crossbow
+
+Mialee:
+  ac: 15
+  hp: 9
+  speed: 30
+  level: 1
+  str: 9
+  dex: 16
+  con: 16
+  int: 16
+  wis: 9
+  cha: 9
+  weapon: light crossbow

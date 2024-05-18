@@ -1,0 +1,50 @@
+dagger:
+  damage: 1d4
+  finesse: true
+  light: true
+  thrown: true
+  range: 20
+
+greataxe:
+  damage: 1d12
+  heavy: true
+  two-handed: true
+
+greatsword:
+  damage: 2d6
+  heavy: true
+  two-handed: true
+
+javelin:
+  damage: 1d6
+  thrown: true
+  range: 30
+
+light crossbow:
+  damage: 1d8
+  ranged: true
+  range: 80
+  loading: true
+  two-handed: true
+
+mace:
+  damage: 1d6
+
+morningstar:
+  damage: 1d8
+
+scimitar:
+  damage: 1d6
+  finesse: true
+  light: true
+
+shortbow:
+  damage: 1d6
+  ranged: true
+  range: 80
+  two-handed: true
+
+sling:
+  damage: 1d4
+  ranged: true
+  range: 30

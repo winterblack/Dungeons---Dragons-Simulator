@@ -1,25 +1,21 @@
 require_relative 'dice'
 
 class Character
-    attr_reader :name, :ac, :hp, :speed
+    attr_reader :name, :ac, :hp, :speed, :level
+    attr_reader :str, :dex, :con, :int, :wis, :cha
+    attr_reader :proficiency_bonus
+    attr_reader :weapon
     attr_reader :initiative
     attr_accessor :current_hp, :dead
     attr_accessor :foes, :target
-
-    def initialize options
-        @name = options[:name]
-        @ac = options[:ac]
-        @current_hp = @hp = options[:hp]
-        @speed = options[:speed]
-    end
 
     def roll_initiative
         @initiative = D20.roll
     end
 
     def take_turn
-        choose_target
-        attack
+        action = choose_action
+        action.perform
     end
 
     def take damage
@@ -29,26 +25,31 @@ class Character
 
     private
 
-    def choose_target
-        @target = foes.reject(&:dead).max_by(&:initiative)
+    def equip_weapon
+        weapon.character = self
     end
 
-    def attack
-        D20.roll >= target.ac ? hit : miss
-    end
-
-    def hit
-        damage = Dice('1d6').roll
-        p "#{name} hit #{target.name} for #{damage} damage"
-        target.take(damage)
-    end
-
-    def miss
-        p "#{name} missed"
+    def choose_action
+        weapon
     end
 
     def die
         self.dead = true
-        p "#{name} died"
+        p "#{name} dies"
+    end
+
+    def set_proficiency_bonus
+        case level
+        when 5..8
+            @proficiency_bonus = 3
+        when 9..12
+            @proficiency_bonus = 4
+        when 13..16
+            @proficiency_bonus = 5
+        when 17..20
+            @proficiency_bonus = 6
+        else
+            @proficiency_bonus = 2
+        end
     end
 end

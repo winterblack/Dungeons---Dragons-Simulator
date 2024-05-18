@@ -1,14 +1,15 @@
-require_relative 'character'
+require_relative 'monster'
 require_relative 'encounter'
+require_relative 'player_character'
 
 def run
-    monsters = Array.new(4) { Character.new({ name: 'Goblin', hp: 7, ac: 15, speed: 30 })}
-    encounter = Encounter.new(monsters)
+    monsters = Array.new(4) { Monster.new('goblin') }
+    encounter = Encounter.new monsters
     party = [
-        Character.new({ name: 'Jozan', hp: 10, ac: 16, speed: 30 }),
-        Character.new({ name: 'Tordek', hp: 10, ac: 16, speed: 30 }),
-        Character.new({ name: 'Lidda', hp: 10, ac: 16, speed: 30 }),
-        Character.new({ name: 'Mialee', hp: 10, ac: 16, speed: 30 }),
+        PlayerCharacter.new('Jozan'),
+        PlayerCharacter.new('Tordek'),
+        PlayerCharacter.new('Lidda'),
+        PlayerCharacter.new('Mialee'),
     ]
     encounter.run(party)
 end
