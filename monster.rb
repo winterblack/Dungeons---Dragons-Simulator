@@ -1,7 +1,5 @@
 require 'yaml'
 require_relative 'character'
-require_relative 'attribute'
-require_relative 'weapon'
 
 class Monster < Character
     Monsters = YAML.load(File.read 'monsters.yaml')
