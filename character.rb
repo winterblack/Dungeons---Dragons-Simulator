@@ -7,8 +7,27 @@ class Character < Position
     attr_reader :proficiency_bonus
     attr_reader :weapon
     attr_reader :initiative
+    attr_reader :character
     attr_accessor :current_hp, :dead
     attr_accessor :foes, :target
+
+    def initialize key, position
+        @name = key
+        @ac = character['ac']
+        @hp = @current_hp = character['hp']
+        @speed = character['speed']
+        @level = character['level']
+        @str = Attribute.new character['str']
+        @dex = Attribute.new character['dex']
+        @con = Attribute.new character['con']
+        @int = Attribute.new character['int']
+        @wis = Attribute.new character['wis']
+        @cha = Attribute.new character['cha']
+        @weapon = Weapon.new character['weapon']
+        @position = position
+        set_proficiency_bonus
+        equip_weapon
+    end
 
     def roll_initiative
         @initiative = D20.roll
