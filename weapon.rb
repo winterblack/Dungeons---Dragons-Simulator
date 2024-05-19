@@ -63,11 +63,15 @@ class Weapon < Action
     end
 
     def valid_targets
-        foes_within(character.speed + range).reject(&:dead)
+        foes_within(max_distance).reject(&:dead)
     end
 
     def choose_target
         @target = valid_targets.min_by(&:current_hp)
+    end
+
+    def max_distance
+        character.speed + range + (character.aggressive ? character.speed : 0)
     end
 
     def direction_to_target

@@ -50,6 +50,7 @@ Orc:
   cha: 10
   challenge: 1/2
   weapon: greataxe
+  aggressive: true
 
 Bugbear:
   ac: 16

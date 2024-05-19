@@ -8,4 +8,8 @@ class PlayerCharacter < Character
         @character = Characters[key]
         super key, position
     end
+
+    def aggressive
+        false
+    end
 end

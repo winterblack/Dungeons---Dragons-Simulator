@@ -22,6 +22,7 @@ class Position
 
     def move movement
         limited_movement = limit_speed movement
+        p "#{name} is aggressive and moves #{limited_movement.abs} feet" if aggressive && limited_movement.abs > speed
         provoke_opportunity_attacks limited_movement
         self.position += limited_movement
     end
@@ -56,7 +57,7 @@ class Position
     def limit_speed movement
         distance = movement.abs
         direction = direction_of movement
-        limit = dash ? speed * 2 : speed
+        limit = speed + (aggressive ? speed : 0) + (dash ? speed : 0)
         distance > limit ? limit * direction : movement
     end
 
