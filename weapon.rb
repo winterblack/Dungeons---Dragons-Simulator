@@ -10,7 +10,7 @@ class Weapon < Action
     def initialize key, character
         weapon = Weapons[key]
         @name = key
-        @damage_dice = weapon['damage']
+        @damage_dice = Dice.new weapon['damage']
         @finesse = weapon['finesse']
         @ranged = weapon['ranged']
         @range = weapon['range'] || 5
@@ -45,7 +45,7 @@ class Weapon < Action
     end
 
     def strike
-        damage = Dice(damage_dice, @critical_hit).roll + ability_bonus
+        damage = damage_dice.roll(@critical_hit) + ability_bonus
         strike_message damage
         target.take damage
     end
@@ -62,7 +62,11 @@ class Weapon < Action
         roll = D20.roll
         @critical_miss = roll == 1
         @critical_hit = roll == 20
-        roll + proficiency_bonus + ability_bonus
+        roll + to_hit_bonus
+    end
+
+    def to_hit_bonus
+        proficiency_bonus + ability_bonus
     end
 
     def roll_to_hit
@@ -74,7 +78,15 @@ class Weapon < Action
     end
 
     def choose_target
-        @target = valid_targets.min_by(&:current_hp)
+        @target = valid_targets.max { |target| evaluate_target target }
+    end
+
+    def evaluate_target target
+        average_damage = damage_dice.average + ability_bonus
+        hit_chance = (21 - target.ac + to_hit_bonus)/20.0
+        hit_chance = 0.95 if hit_chance > 0.95
+        hit_chance = 0.05 if hit_chance < 0.05
+        hit_chance * average_damage / target.current_hp
     end
 
     def max_distance
