@@ -19,15 +19,18 @@ class Position
         foes.select { |foe| distance_to(foe) <= range }
     end
 
-
     def move movement
         limited_movement = limit_speed movement
         p "#{name} is aggressive and moves #{limited_movement.abs} feet" if aggressive && limited_movement.abs > speed
         provoke_opportunity_attacks limited_movement
-        self.position += limited_movement
+        actually_move limited_movement unless dead
     end
 
     private
+
+    def actually_move movement
+        self.position += movement
+    end
 
     def direction_of movement
         movement.positive? ? 1 : -1
@@ -36,8 +39,7 @@ class Position
     def provoke_opportunity_attacks movement
         destination = position + movement
         foes_in_path_to(destination).each do |foe|
-            p "#{foe.name} makes an opportunity attack against #{self.name}"
-            foe.attack self
+            foe.opportunity_attack self
         end
     end
 

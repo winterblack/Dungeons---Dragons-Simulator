@@ -20,7 +20,7 @@ class Weapon < Action
     def perform
         target = choose_target
         move_into_position
-        attack target
+        attack target unless character.dead
     end
 
     def attack target
