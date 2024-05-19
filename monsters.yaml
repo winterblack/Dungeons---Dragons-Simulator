@@ -1,4 +1,4 @@
-kobold:
+Kobold:
   ac: 12
   hp: 5
   speed: 30
@@ -12,7 +12,7 @@ kobold:
   weapon: dagger
   sidearm: sling
 
-goblin:
+Goblin:
   ac: 15
   hp: 7
   speed: 30
@@ -25,7 +25,7 @@ goblin:
   challenge: 1/4
   weapon: scimitar
 
-goblin (shortbow):
+Goblin (shortbow):
   ac: 13
   hp: 7
   speed: 30
@@ -38,7 +38,7 @@ goblin (shortbow):
   challenge: 1/4
   weapon: shortbow
 
-orc:
+Orc:
   ac: 13
   hp: 15
   speed: 30
@@ -51,7 +51,7 @@ orc:
   challenge: 1/2
   weapon: greataxe
 
-bugbear:
+Bugbear:
   ac: 16
   hp: 27
   speed: 30

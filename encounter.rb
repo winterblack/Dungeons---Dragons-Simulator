@@ -30,7 +30,7 @@ class Encounter
         positions = (min_position..max_position).to_a.reverse.map { |i| i*5 }
         positions.each do |position|
             characters_at_pos = living_characters.select { |char| char.position == position }
-            chars = characters_at_pos.map { |char| "#{char.name} #{char.current_hp}/#{char.hp}" }.join(" - ")
+            chars = characters_at_pos.join(" - ")
             p "#{position} - #{chars}"
         end
         sleep 1

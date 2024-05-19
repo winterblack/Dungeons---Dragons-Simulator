@@ -1,24 +1,36 @@
-class Weapon
+require_relative 'action'
+
+class Weapon < Action
     attr_reader :name, :damage_dice, :finesse, :ranged
     attr_reader :range
     attr_reader :target, :hit
-    attr_accessor :character
 
     Weapons = YAML.load(File.read 'weapons.yaml')
 
-    def initialize name
-        weapon = Weapons[name]
-        @name = name
+    def initialize key, character
+        weapon = Weapons[key]
+        @name = key
         @damage_dice = weapon['damage']
         @finesse = weapon['finesse']
         @ranged = weapon['ranged']
         @range = weapon['range'] || 5
+        super character
     end
 
     def perform
-        @target = choose_target
-        return character.dash_forward if !target
+        target = choose_target
+        move_into_position
         attack target
+    end
+
+    def attack target
+        @target = target
+        roll_to_hit
+        @hit ? strike : miss
+    end
+
+    def valid_targets?
+        !valid_targets.empty?
     end
 
     private
@@ -26,12 +38,6 @@ class Weapon
     def move_into_position
         distance = distance_to_target - range
         character.move distance * direction_to_target
-    end
-
-    def attack target
-        move_into_position
-        roll_to_hit
-        @hit ? strike : miss
     end
 
     def miss
@@ -61,7 +67,7 @@ class Weapon
     end
 
     def choose_target
-        @target = valid_targets.max_by(&:initiative)
+        @target = valid_targets.min_by(&:current_hp)
     end
 
     def direction_to_target

@@ -2,12 +2,13 @@ require_relative 'dice'
 require_relative 'position'
 require_relative 'attribute'
 require_relative 'weapon'
+require_relative 'dash'
 
 class Character < Position
     attr_reader :name, :ac, :hp, :speed, :level
     attr_reader :str, :dex, :con, :int, :wis, :cha
     attr_reader :proficiency_bonus
-    attr_reader :weapon
+    attr_reader :weapon, :dash
     attr_reader :initiative
     attr_reader :character
     attr_accessor :current_hp, :dead
@@ -25,10 +26,14 @@ class Character < Position
         @int = Attribute.new character['int']
         @wis = Attribute.new character['wis']
         @cha = Attribute.new character['cha']
-        @weapon = Weapon.new character['weapon']
+        @weapon = Weapon.new character['weapon'], self
         @position = position
+        @dash = Dash.new self
         set_proficiency_bonus
-        equip_weapon
+    end
+
+    def attack foe
+        weapon.attack foe
     end
 
     def roll_initiative
@@ -45,6 +50,10 @@ class Character < Position
         die if current_hp < 1
     end
 
+    def to_s
+        "<#{name} hp=#{current_hp}/#{hp}>"
+    end
+
     private
 
     def equip_weapon
@@ -52,7 +61,7 @@ class Character < Position
     end
 
     def choose_action
-        weapon
+        weapon.valid_targets? ? weapon : dash
     end
 
     def die
