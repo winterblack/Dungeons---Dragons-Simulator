@@ -24,9 +24,12 @@ class Encounter
     end
 
     def render_positions
-        positions = (-16..16).to_a.reverse.map { |i| i*5 }
+        living_characters = characters.reject(&:dead)
+        min_position = living_characters.map(&:position).min / 5
+        max_position = living_characters.map(&:position).max / 5
+        positions = (min_position..max_position).to_a.reverse.map { |i| i*5 }
         positions.each do |position|
-            characters_at_pos = characters.reject(&:dead).select { |char| char.position == position }
+            characters_at_pos = living_characters.select { |char| char.position == position }
             chars = characters_at_pos.map { |char| "#{char.name} #{char.current_hp}/#{char.hp}" }.join(" - ")
             p "#{position} - #{chars}"
         end

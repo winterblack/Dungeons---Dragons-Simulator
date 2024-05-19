@@ -17,19 +17,15 @@ class Weapon
 
     def perform
         @target = choose_target
-        return character.move_towards_closest_foe if !target
+        return character.dash_forward if !target
         attack target
     end
 
     private
 
-    def movement
-        distance = distance_to_target - range
-        [distance, character.speed].min * direction_to_target
-    end
-
     def move_into_position
-        character.move movement
+        distance = distance_to_target - range
+        character.move distance * direction_to_target
     end
 
     def attack target
@@ -44,7 +40,7 @@ class Weapon
 
     def strike
         damage = Dice(damage_dice).roll + ability_bonus
-        p "#{character.name} hits #{target.name} for #{damage} damage"
+        p "#{character.name} hits #{target.name} for #{damage} damage with #{name}"
         target.take damage
     end
 
