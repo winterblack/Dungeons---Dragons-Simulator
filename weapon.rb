@@ -26,7 +26,7 @@ class Weapon < Action
     def attack target
         @target = target
         roll_to_hit
-        @hit ? strike : miss
+        hit ? strike : miss
     end
 
     def valid_targets?
@@ -45,9 +45,13 @@ class Weapon < Action
     end
 
     def strike
-        damage = Dice(damage_dice).roll + ability_bonus
-        p "#{character.name} hits #{target.name} for #{damage} damage with #{name}"
+        damage = Dice(damage_dice, @critical_hit).roll + ability_bonus
+        strike_message damage
         target.take damage
+    end
+
+    def strike_message damage
+        p "#{character.name}#{" critically" if @critical_hit} hit #{target.name} for #{damage} damage with #{name}"
     end
 
     def ability_bonus
@@ -55,11 +59,14 @@ class Weapon < Action
     end
 
     def attack_roll
-        D20.roll + proficiency_bonus + ability_bonus
+        roll = D20.roll
+        @critical_miss = roll == 1
+        @critical_hit = roll == 20
+        roll + proficiency_bonus + ability_bonus
     end
 
     def roll_to_hit
-        @hit = (attack_roll != 1 && attack_roll > target.ac)
+        @hit = attack_roll >= target.ac && !@critical_miss || @critical_hit
     end
 
     def valid_targets

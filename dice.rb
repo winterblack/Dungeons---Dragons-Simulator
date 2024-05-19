@@ -1,9 +1,9 @@
 class Dice
     attr_reader :count, :type
 
-    def initialize expression
+    def initialize expression, crit
         parts = expression.split('d').map(&:to_i)
-        @count = parts.first
+        @count = crit ? parts.first * 2 : parts.first
         @type = parts.last
     end
 
@@ -18,6 +18,6 @@ class D20
     end
 end
 
-def Dice expression
-    Dice.new expression
+def Dice expression, crit=false
+    Dice.new expression, crit
 end
