@@ -1,6 +1,7 @@
 class Weapon
     attr_reader :name, :damage_dice, :finesse, :ranged
-    attr_reader :target
+    attr_reader :range
+    attr_reader :target, :hit
     attr_accessor :character
 
     Weapons = YAML.load(File.read 'weapons.yaml')
@@ -11,16 +12,28 @@ class Weapon
         @damage_dice = weapon['damage']
         @finesse = weapon['finesse']
         @ranged = weapon['ranged']
+        @range = weapon['range'] || 5
     end
 
     def perform
         @target = choose_target
+        return character.move_towards_closest_foe if !target
         attack target
     end
 
     private
 
+    def movement
+        distance = distance_to_target - range
+        [distance, character.speed].min * direction_to_target
+    end
+
+    def move_into_position
+        character.move movement
+    end
+
     def attack target
+        move_into_position
         roll_to_hit
         @hit ? strike : miss
     end
@@ -36,18 +49,46 @@ class Weapon
     end
 
     def ability_bonus
-        (ranged || finesse) ? character.dex : character.str
+        (ranged || finesse) ? dex : str
     end
 
     def attack_roll
-        D20.roll + character.proficiency_bonus + ability_bonus
+        D20.roll + proficiency_bonus + ability_bonus
     end
 
     def roll_to_hit
         @hit = (attack_roll != 1 && attack_roll > target.ac)
     end
 
+    def valid_targets
+        foes_within(character.speed + range).reject(&:dead)
+    end
+
     def choose_target
-        @target = character.foes.reject(&:dead).max_by(&:initiative)
+        @target = valid_targets.max_by(&:initiative)
+    end
+
+    def direction_to_target
+        character.direction_to target
+    end
+
+    def distance_to_target
+        character.distance_to target
+    end
+
+    def foes_within distance
+        character.foes_within distance
+    end
+
+    def proficiency_bonus
+        character.proficiency_bonus
+    end
+
+    def str
+        character.str
+    end
+
+    def dex
+        character.dex
     end
 end

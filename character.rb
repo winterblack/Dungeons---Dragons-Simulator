@@ -1,6 +1,7 @@
 require_relative 'dice'
+require_relative 'position'
 
-class Character
+class Character < Position
     attr_reader :name, :ac, :hp, :speed, :level
     attr_reader :str, :dex, :con, :int, :wis, :cha
     attr_reader :proficiency_bonus

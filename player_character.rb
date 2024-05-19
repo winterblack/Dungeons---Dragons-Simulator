@@ -6,7 +6,7 @@ require_relative 'weapon'
 class PlayerCharacter < Character
     Characters = YAML.load(File.read 'player_characters.yaml')
 
-    def initialize name
+    def initialize name, position=0
         character = Characters[name]
         @name = name
         @ac = character['ac']
@@ -20,6 +20,7 @@ class PlayerCharacter < Character
         @wis = Attribute.new character['wis']
         @cha = Attribute.new character['cha']
         @weapon = Weapon.new character['weapon']
+        @position = position
         set_proficiency_bonus
         equip_weapon
     end

@@ -8,8 +8,8 @@ def run
     party = [
         PlayerCharacter.new('Jozan'),
         PlayerCharacter.new('Tordek'),
-        PlayerCharacter.new('Lidda'),
-        PlayerCharacter.new('Mialee'),
+        PlayerCharacter.new('Lidda', -30),
+        PlayerCharacter.new('Mialee', -30),
     ]
     encounter.run(party)
 end
