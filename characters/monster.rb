@@ -4,11 +4,9 @@ require_relative 'character'
 class Monster < Character
     attr_reader :aggressive
 
-    Monsters = YAML.load(File.read 'monsters.yaml')
-
-    def initialize key, position=30
-        @character = Monsters[key]
+    def initialize character, name
         @aggressive = character['aggressive']
-        super key, position
+        character['name'] = name
+        super character, 30
     end
 end

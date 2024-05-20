@@ -15,8 +15,8 @@ class Character < Position
     attr_accessor :foes
     attr_accessor :reaction_available
 
-    def initialize key, position
-        @name = key
+    def initialize character, position
+        @name = character['name']
         @ac = character['ac']
         @hp = @current_hp = character['hp']
         @speed = character['speed']

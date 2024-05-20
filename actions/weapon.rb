@@ -129,7 +129,7 @@ class Weapon < Action
 
     def evaluate_risk target
         destination = character.position + movement_into_position
-        character.foes_in_path_to(destination).select(&:reaction).map do |foe|
+        character.foes_in_path_to(destination).select(&:reaction_available).map do |foe|
             foe.weapon.evaluate_target character
         end.sum
     end

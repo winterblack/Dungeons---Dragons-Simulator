@@ -1,7 +1,11 @@
 require 'require_all'
+require 'yaml'
 require_relative 'encounter'
 require_relative 'characters/monster'
 require_all 'characters/classes'
+
+Monsters = YAML.load(File.read 'monsters.yaml')
+Characters = YAML.load(File.read 'player_characters.yaml')
 
 def run
     i = 1
@@ -11,13 +15,13 @@ def run
         puts
         i += 1
 
-        monsters = Array.new(4) { Monster.new('Kobold') }
+        monsters = Array.new(8) { |i| Monster.new(Monsters['Kobold'], "Kobold-#{i+1}") }
         encounter = Encounter.new monsters
         party = [
-            Cleric.new('Jozan'),
-            Fighter.new('Tordek'),
-            Rogue.new('Lidda'),
-            Wizard.new('Mialee'),
+            Cleric.new(Characters['cleric']),
+            Fighter.new(Characters['fighter']),
+            Rogue.new(Characters['rogue']),
+            Wizard.new(Characters['wizard']),
         ]
         encounter.run(party)
     end

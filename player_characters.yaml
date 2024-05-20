@@ -1,4 +1,5 @@
-Jozan:
+cleric:
+  name: 'Jozan'
   ac: 18
   hp: 11
   speed: 30
@@ -11,7 +12,8 @@ Jozan:
   cha: 9
   weapon: mace
 
-Tordek:
+fighter:
+  name: 'Tordek'
   ac: 16
   hp: 13
   speed: 30
@@ -24,7 +26,8 @@ Tordek:
   cha: 9
   weapon: greatsword
 
-Lidda:
+rogue:
+  name: 'Lidda'
   ac: 14
   hp: 11
   speed: 30
@@ -37,7 +40,8 @@ Lidda:
   cha: 10
   weapon: light crossbow
 
-Mialee:
+wizard:
+  name: 'Mialee'
   ac: 16
   hp: 9
   speed: 30
