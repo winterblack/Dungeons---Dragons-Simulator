@@ -1,5 +1,3 @@
-require 'pry'
-
 module RangedWeapon
     def ability_bonus
         character.dex.bonus

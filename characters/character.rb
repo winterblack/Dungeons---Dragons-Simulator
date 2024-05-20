@@ -1,8 +1,8 @@
-require_relative 'dice'
+require_relative '../dice'
 require_relative 'position'
 require_relative 'attribute'
-require_relative 'weapon'
-require_relative 'dash'
+require_relative '../actions/weapon'
+require_relative '../actions/dash'
 
 class Character < Position
     attr_reader :name, :ac, :hp, :speed, :level

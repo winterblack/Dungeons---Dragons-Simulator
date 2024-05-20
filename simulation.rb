@@ -1,6 +1,6 @@
-require_relative 'monster'
 require_relative 'encounter'
-require_relative 'player_character'
+require_relative 'characters/monster'
+require_relative 'characters/player_character'
 
 def run
     i = 1
