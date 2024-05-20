@@ -24,7 +24,6 @@ class Weapon < Action
         move_into_position if should_move
         p "#{character.name} decided not to move and to attack with disadvantage to avoid opportunity attacks" unless should_move
         p "#{character.name} decided to risk opportunity attacks to attack without disadvantage" if should_move && @risky
-        binding.pry if should_move && @risky
         attack target unless character.dead
     end
 
