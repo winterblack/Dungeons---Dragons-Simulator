@@ -1,8 +1,9 @@
 require_relative 'action'
 require_relative 'target_value'
+require_relative 'ranged_weapon'
 
 class Weapon < Action
-    attr_reader :name, :damage_dice, :finesse, :ranged
+    attr_reader :name, :damage_dice, :finesse
     attr_reader :range
     attr_reader :target, :hit, :should_move
 
@@ -10,10 +11,10 @@ class Weapon < Action
 
     def initialize key, character
         weapon = Weapons[key]
+        extend RangedWeapon if weapon['ranged']
         @name = key
         @damage_dice = Dice.new weapon['damage']
         @finesse = weapon['finesse']
-        @ranged = weapon['ranged']
         @range = weapon['range'] || 5
         @should_move = true
         super character
@@ -38,6 +39,7 @@ class Weapon < Action
     end
 
     def evaluate_target target
+        p "#{character.name} has disadvantage if they don't move" if advantage_disadvantage == :disadvantage
         hit_chance(target) * evaluate_damage(target)
     end
 
@@ -47,20 +49,14 @@ class Weapon < Action
         [average_damage / target.current_hp, 1].min
     end
 
-    def evaluate_target_ranged target
-        ranged_hit_chance(target) * evaluate_damage(target)
-    end
-
-    def ranged_hit_chance target
-        chance = hit_chance target
-        ranged_attack_in_close_combat ? chance**2 : chance
-    end
-
     def hit_chance target
         chance = (21 - target.ac + to_hit_bonus)/20.0
         return 0.95 if chance > 0.95
         return 0.05 if chance < 0.05
-        chance
+        advantage_disadvantage == :disadvantage ? chance**2 : chance
+    end
+
+    def advantage_disadvantage
     end
 
     def average_damage
@@ -90,18 +86,17 @@ class Weapon < Action
     end
 
     def ability_bonus
-        (ranged || finesse) ? character.dex.bonus : character.str.bonus
+        finesse ? character.dex.bonus : character.str.bonus
     end
 
     def attack_roll
-        roll = ranged_attack_in_close_combat ? D20.roll(:disadvantage) : D20.roll
+        roll = D20.roll advantage_disadvantage
         @critical_miss = roll == 1
         @critical_hit = roll == 20
         roll + to_hit_bonus
     end
 
-    def ranged_attack_in_close_combat
-        ranged && character.foes_within(5).any?
+    def advantage_disadvantage
     end
 
     def to_hit_bonus
@@ -117,37 +112,7 @@ class Weapon < Action
     end
 
     def choose_target
-        @target = ranged ? choose_ranged_target : choose_melee_target
-    end
-
-    def target_with_movement
-        targets_with_movement.max_by(&:value)
-    end
-
-    def targets_with_movement
-        valid_targets.map do |target|
-            TargetValue.new(target, evaluate_target_with_risk(target))
-        end
-    end
-
-    def target_without_movement
-        targets_without_movement.max_by(&:value)
-    end
-
-    def targets_without_movement
-        foes_within(range).map do |target|
-            TargetValue.new(target, evaluate_target_ranged(target))
-        end
-    end
-
-    def choose_ranged_target
-        @should_move = foes_within(range).empty? || target_with_movement.value >= target_without_movement.value
-        @risky = evaluate_risk(target_with_movement.target) > 0
-        should_move ? target_with_movement.target : target_without_movement.target
-    end
-
-    def choose_melee_target
-        valid_targets.max { |target| evaluate_target_with_risk target }
+        @target = valid_targets.max { |target| evaluate_target_with_risk target }
     end
 
     def evaluate_target_with_risk target

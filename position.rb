@@ -35,10 +35,18 @@ class Position
             distance_to(foe) < distance &&
             (foe.position - destination).abs > foe.weapon.range
         end
-        (foes_in_path + foes_within(5)).reject { |foe| foe.weapon.ranged }
+        (foes_in_path + foes_within(5)).reject { |foe| foe.weapon.is_a? RangedWeapon }
+    end
+
+    def foes_within_radius_of position, radius
+        foes.reject(&:dead).select { |foe| distance_between(foe, position) <= radius }
     end
 
     private
+
+    def distance_between target, position
+        (target.position - position).abs
+    end
 
     def actually_move movement
         self.position += movement
