@@ -142,6 +142,7 @@ class Weapon < Action
 
     def choose_ranged_target
         @should_move = foes_within(range).empty? || target_with_movement.value >= target_without_movement.value
+        @risky = evaluate_risk(target_with_movement.target) > 0
         should_move ? target_with_movement.target : target_without_movement.target
     end
 
