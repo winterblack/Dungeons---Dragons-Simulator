@@ -11,7 +11,7 @@ def run
         puts
         i += 1
 
-        monsters = Array.new(4) { Monster.new('Orc') }
+        monsters = Array.new(4) { Monster.new('Kobold') }
         encounter = Encounter.new monsters
         party = [
             Cleric.new('Jozan'),

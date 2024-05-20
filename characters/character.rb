@@ -34,6 +34,12 @@ class Character < Position
         set_proficiency_bonus
     end
 
+    def heal healing
+        max_healing = [hp - current_hp, healing].min
+        self.current_hp += max_healing
+        p "#{name} heals for #{max_healing} hp and is at #{current_hp}."
+    end
+
     def opportunity_attack foe
         return if !reaction || foe.dead
         p "#{name} makes an opportunity attack against #{foe.name}"
