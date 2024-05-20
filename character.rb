@@ -12,7 +12,7 @@ class Character < Position
     attr_reader :initiative
     attr_reader :character
     attr_accessor :current_hp, :dead
-    attr_accessor :foes, :target
+    attr_accessor :foes
     attr_accessor :reaction
 
     def initialize key, position
@@ -92,6 +92,10 @@ class Character < Position
     end
 
     def to_s
+        "<#{name} hp=#{current_hp}/#{hp}>"
+    end
+
+    def inspect
         "<#{name} hp=#{current_hp}/#{hp}>"
     end
 end

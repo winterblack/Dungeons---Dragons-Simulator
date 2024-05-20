@@ -14,3 +14,11 @@ class Integer
         addend.is_a?(Attribute) ? self.add(addend.bonus) : self.add(addend)
     end
 end
+
+class Float
+    alias_method :add, :+
+
+    def + addend
+        addend.is_a?(Attribute) ? self.add(addend.bonus) : self.add(addend)
+    end
+end

@@ -2,9 +2,7 @@ class Position
     attr_accessor :position, :dash
 
     def dash_forward
-        p "#{name} dashes forward"
-        dash = true
-        move displacement_to(closest_foe)
+        move(displacement_to(closest_foe), closest_foe, true)
     end
 
     def direction_to target
@@ -16,14 +14,28 @@ class Position
     end
 
     def foes_within range
-        foes.select { |foe| distance_to(foe) <= range }
+        foes.reject(&:dead).select { |foe| distance_to(foe) <= range }
     end
 
-    def move movement
-        limited_movement = limit_speed movement
-        p "#{name} is aggressive and moves #{limited_movement.abs} feet" if aggressive && limited_movement.abs > speed
+    def move movement, target, dash=false
+        direction = direction_of(movement) == direction_to(target) ? "towards" : "away from"
+        limited_movement = limit_speed movement, dash
+        distance = limited_movement.abs
+        p "#{name} #{dash ? "dashes" : "moves"}#{" aggressively" if aggressive && distance > speed} #{distance} feet #{direction} #{target.name}" if movement.abs > 0
         provoke_opportunity_attacks limited_movement
         actually_move limited_movement unless dead
+    end
+
+    def foes_in_path_to destination
+        displacement = destination - position
+        distance = displacement.abs
+        direction = direction_of displacement
+        foes_in_path = foes.reject(&:dead).select do |foe|
+            direction_to(foe) == direction &&
+            distance_to(foe) < distance &&
+            (foe.position - destination).abs > foe.weapon.range
+        end
+        (foes_in_path + foes_within(5)).reject { |foe| foe.weapon.ranged }
     end
 
     private
@@ -43,20 +55,7 @@ class Position
         end
     end
 
-    def foes_in_path_to destination
-        displacement = destination - position
-        distance = displacement.abs
-        direction = direction_of displacement
-        foes.select do |foe|
-            direction_to(foe) == direction && distance_to(foe) < distance
-        end.reject do |foe|
-            foe.weapon.ranged
-        end.select do |foe|
-            (foe.position - destination).abs > foe.weapon.range
-        end
-    end
-
-    def limit_speed movement
+    def limit_speed movement, dash
         distance = movement.abs
         direction = direction_of movement
         limit = speed + (aggressive ? speed : 0) + (dash ? speed : 0)

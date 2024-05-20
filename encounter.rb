@@ -26,7 +26,7 @@ class Encounter
         living_characters = characters.reject(&:dead)
         min_position = living_characters.map(&:position).min / 5
         max_position = living_characters.map(&:position).max / 5
-        positions = (min_position..max_position).to_a.reverse.map { |i| i*5 }
+        positions = (-15..6).to_a.reverse.map { |i| i*5 }
         positions.each do |position|
             characters_at_pos = living_characters.select { |char| char.position == position }
             chars = characters_at_pos.join(" - ")
