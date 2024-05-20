@@ -25,8 +25,8 @@ module Spellcaster
         [:spell_slots, 4, 3, 3, 3, 3, 2, 2, 1, 1 ]
       ]
 
-    def initialize character
-        super character
+    def initialize character, position
+        super character, position
         set_spell_slots
     end
 

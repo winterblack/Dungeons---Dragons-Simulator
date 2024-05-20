@@ -1,4 +1,5 @@
 require_relative '../player_character'
+require_relative '../spellcaster'
 
 class Wizard < PlayerCharacter
     include Spellcaster
