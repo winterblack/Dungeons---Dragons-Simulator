@@ -13,7 +13,7 @@ class Character < Position
     attr_reader :character
     attr_accessor :current_hp, :dead
     attr_accessor :foes
-    attr_accessor :reaction
+    attr_accessor :reaction_available
 
     def initialize key, position
         @name = key
@@ -30,7 +30,7 @@ class Character < Position
         @weapon = Weapon.new character['weapon'], self
         @position = position
         @dash = Dash.new self
-        @reaction = true
+        @reaction_available = true
         set_proficiency_bonus
     end
 
@@ -41,11 +41,11 @@ class Character < Position
     end
 
     def opportunity_attack foe
-        return if !reaction || foe.dead
+        return if !reaction_available || foe.dead
         p "#{name} makes an opportunity attack against #{foe.name}"
         weapon.attack foe
         foe.position = position if foe.dead
-        @reaction = false
+        @reaction_available = false
     end
 
     def roll_initiative
@@ -66,7 +66,7 @@ class Character < Position
     private
 
     def start_turn
-        reaction = true
+        reaction_available = true
     end
 
     def equip_weapon
