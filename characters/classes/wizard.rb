@@ -1,7 +1,9 @@
 require_relative '../player_character'
 
 class Wizard < PlayerCharacter
-    def initialize key
-        super key, -30
+    include Spellcaster
+
+    def initialize character
+        super character, -30
     end
 end

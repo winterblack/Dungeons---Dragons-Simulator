@@ -2,8 +2,8 @@ require_relative '../player_character'
 require_relative '../class_features/sneak_attack'
 
 class Rogue < PlayerCharacter
-    def initialize key
-        super key, -30
+    def initialize character
+        super character, -30
         learn_sneak_attack
     end
 
