@@ -8,7 +8,7 @@ class Dice
     end
 
     def roll crit=false
-        (crit ? count : count * 2).times.collect { rand 1..type }.sum
+        (crit ? count * 2 : count).times.collect { rand 1..type }.sum
     end
 
     def average
