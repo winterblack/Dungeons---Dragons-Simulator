@@ -90,7 +90,7 @@ class Weapon < Action
     end
 
     def ability_bonus
-        (ranged || finesse) ? dex : str
+        (ranged || finesse) ? character.dex.bonus : character.str.bonus
     end
 
     def attack_roll
@@ -142,7 +142,6 @@ class Weapon < Action
 
     def choose_ranged_target
         @should_move = foes_within(range).empty? || target_with_movement.value >= target_without_movement.value
-        @risky = evaluate_risk(target_with_movement.target) > 0
         should_move ? target_with_movement.target : target_without_movement.target
     end
 
@@ -175,13 +174,5 @@ class Weapon < Action
 
     def proficiency_bonus
         character.proficiency_bonus
-    end
-
-    def str
-        character.str
-    end
-
-    def dex
-        character.dex
     end
 end

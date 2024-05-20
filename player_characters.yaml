@@ -25,7 +25,7 @@ Tordek:
   weapon: greatsword
 
 Lidda:
-  ac: 15
+  ac: 14
   hp: 11
   speed: 30
   level: 1
@@ -38,7 +38,7 @@ Lidda:
   weapon: light crossbow
 
 Mialee:
-  ac: 15
+  ac: 16
   hp: 9
   speed: 30
   level: 1
