@@ -1,6 +1,7 @@
+require 'require_all'
 require_relative 'encounter'
 require_relative 'characters/monster'
-require_relative 'characters/player_character'
+require_all 'characters/classes'
 
 def run
     i = 1
@@ -13,10 +14,10 @@ def run
         monsters = Array.new(4) { Monster.new('Orc') }
         encounter = Encounter.new monsters
         party = [
-            PlayerCharacter.new('Jozan'),
-            PlayerCharacter.new('Tordek'),
-            PlayerCharacter.new('Lidda', -30),
-            PlayerCharacter.new('Mialee', -30),
+            Cleric.new('Jozan'),
+            Fighter.new('Tordek'),
+            Rogue.new('Lidda'),
+            Wizard.new('Mialee'),
         ]
         encounter.run(party)
     end

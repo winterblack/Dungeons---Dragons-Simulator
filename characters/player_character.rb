@@ -4,7 +4,7 @@ require_relative 'character'
 class PlayerCharacter < Character
     Characters = YAML.load(File.read 'player_characters.yaml')
 
-    def initialize key, position=0
+    def initialize key, position
         @character = Characters[key]
         super key, position
     end

@@ -5,7 +5,7 @@ require_relative 'ranged_weapon'
 class Weapon < Action
     attr_reader :name, :damage_dice, :finesse
     attr_reader :range
-    attr_reader :target, :hit, :should_move
+    attr_reader :target, :hit, :should_move, :critical_hit
 
     Weapons = YAML.load(File.read 'weapons.yaml')
 
@@ -35,21 +35,21 @@ class Weapon < Action
     end
 
     def valid_targets?
-        !valid_targets.empty?
+        valid_targets.any?
     end
 
     def evaluate_target target
-        p "#{character.name} has disadvantage if they don't move" if advantage_disadvantage == :disadvantage
-        hit_chance(target) * evaluate_damage(target)
+        @target = target
+        hit_chance * evaluate_damage
     end
 
     private
 
-    def evaluate_damage target
+    def evaluate_damage
         [average_damage / target.current_hp, 1].min
     end
 
-    def hit_chance target
+    def hit_chance
         chance = (21 - target.ac + to_hit_bonus)/20.0
         return 0.95 if chance > 0.95
         return 0.05 if chance < 0.05
@@ -64,10 +64,10 @@ class Weapon < Action
     end
 
     def move_into_position
-        character.move(movement_into_position(target), target)
+        character.move(movement_into_position, target)
     end
 
-    def movement_into_position target
+    def movement_into_position
         (character.distance_to(target) - range) * character.direction_to(target)
     end
 
@@ -76,17 +76,25 @@ class Weapon < Action
     end
 
     def strike
-        damage = damage_dice.roll(@critical_hit) + ability_bonus
+        damage = roll_damage
         strike_message damage
         target.take damage
     end
 
+    def roll_damage
+        damage_dice.roll(critical_hit) + ability_bonus
+    end
+
     def strike_message damage
-        p "#{character.name}#{" critically" if @critical_hit} hits #{target.name} for #{damage} damage with #{name}"
+        p "#{character.name}#{" critically" if critical_hit} hits #{target.name} for #{damage} damage with #{name}"
     end
 
     def ability_bonus
         finesse ? character.dex.bonus : character.str.bonus
+    end
+
+    def ability
+        finesse ? :dex : :str
     end
 
     def attack_roll
@@ -104,7 +112,7 @@ class Weapon < Action
     end
 
     def roll_to_hit
-        @hit = attack_roll >= target.ac && !@critical_miss || @critical_hit
+        @hit = attack_roll >= target.ac && !@critical_miss || critical_hit
     end
 
     def valid_targets
@@ -120,7 +128,7 @@ class Weapon < Action
     end
 
     def evaluate_risk target
-        destination = character.position + movement_into_position(target)
+        destination = character.position + movement_into_position
         character.foes_in_path_to(destination).select(&:reaction).map do |foe|
             foe.weapon.evaluate_target character
         end.sum
